@@ -1,0 +1,34 @@
+{
+    "name": "chipolo/push",
+    "description": "Send push notifications to Android and iOS",
+    "version": "0.0.1",
+    "keywords": [
+        "laravel",
+        "fcm",
+        "apns",
+        "google push",
+        "apple push"
+    ],
+    "homepage": "https://chipolo.net",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Chipolo"
+        }
+    ],
+    "support": {
+        "email": "marko@chipolo.net"
+    },
+    "autoload": {
+        "psr-4": {
+          "Chipolo\\Push\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Chipolo\\Push\\ServiceProvider"
+            ]
+        }
+    }
+}
