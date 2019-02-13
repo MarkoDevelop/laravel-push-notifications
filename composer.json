@@ -27,7 +27,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Chipolo\\Push\\ChipoloPushServiceProvider"
+                "Chipolo\\Push\\PushServiceProvider"
             ]
         }
     },

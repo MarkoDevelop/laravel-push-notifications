@@ -4,7 +4,7 @@ namespace Chipolo\Push;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
-class ChipoloPushServiceProvider extends BaseServiceProvider
+class PushServiceProvider extends BaseServiceProvider
 {
     /**
      * Bootstrap any application services.
