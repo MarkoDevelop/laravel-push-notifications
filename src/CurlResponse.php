@@ -67,11 +67,16 @@ class CurlResponse
 
     public function getStatusCode()
     {
-        return $this->getStatusCode;
+        return $this->statusCode;
     }
 
     public function getError()
     {
         return $this->error;
+    }
+
+    public function __toString()
+    {
+        return $this->getResponse();
     }
 }

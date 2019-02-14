@@ -43,7 +43,7 @@ abstract class BasePush
 
     public function getPayload()
     {
-        return $this->payload;
+        return json_encode($this->payload);
     }
 
     /**
@@ -84,7 +84,7 @@ abstract class BasePush
             CURLOPT_HTTPHEADER     => $this->getHeaders(),
         ]);
 
-        $response = curl_exec($curl);
+        $response   = curl_exec($curl);
         $this->curl = new CurlResponse($curl, $response);
         curl_close($curl);
 
@@ -93,7 +93,6 @@ abstract class BasePush
 
     abstract public function send(
         string $token,
-        array $payload,
-        string $topic
-    ): CurlReponse;
+        array $payload
+    ): CurlResponse;
 }

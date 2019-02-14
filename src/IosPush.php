@@ -2,6 +2,7 @@
 
 namespace Chipolo\Push;
 
+use Exception;
 use Jose\Component\Signature\JWSBuilder;
 use Jose\Component\Core\AlgorithmManager;
 use Jose\Component\KeyManagement\JWKFactory;
@@ -12,6 +13,7 @@ use Jose\Component\Signature\Serializer\CompactSerializer;
 class IosPush extends BasePush
 {
     protected $sandbox = false;
+    protected $topic;
     private $repeated  = 0;
 
     private function createToken(): string
@@ -20,8 +22,7 @@ class IosPush extends BasePush
             new ES256(),
         ]);
 
-        $jwk = JWKFactory::createFromKeyFile(config('chipolo-push.ios.certificat-path'));
-
+        $jwk           = JWKFactory::createFromKeyFile(config('chipolo-push.ios.certificate-path'));
         $jsonConverter = new StandardConverter();
         $jwsBuilder    = new JWSBuilder($jsonConverter, $algorithmManager);
 
@@ -44,6 +45,22 @@ class IosPush extends BasePush
         $token = $serializer->serialize($jws);
 
         return $token;
+    }
+
+    public function setTopic(bool $topic)
+    {
+        $this->topic = $topic;
+
+        return $this;
+    }
+
+    private function getTopic()
+    {
+        if (! is_null($this->topic)) {
+            return $this->topic;
+        }
+
+        throw new Exception('iOS topic must be set!');
     }
 
     public function setSandboxMode(bool $sandbox)
@@ -72,14 +89,14 @@ class IosPush extends BasePush
         string $token,
         array $payload,
         string $topic
-    ): CurlReponse {
+    ): CurlResponse {
         $response = $this->setUrl($this->getPath($token))
             ->setPayload($payload)
             ->setHeaders([
-            'Content-Type'     => 'application/json',
-            'Apns-Expiration:' => 0,
-            'Apns-Topic'       => $topic,
-            'Authorization'    => 'Bearer ' . $this->createToken(),
+                'Content-Type'     => 'application/json',
+                'Apns-Expiration'  => 0,
+                'Apns-Topic'       => $this->getTopic(),
+                'Authorization'    => 'Bearer ' . $this->createToken(),
         ])->handle();
 
         if ($response->getStatusCode() != 200 && $this->repeated < 3) {
@@ -89,35 +106,5 @@ class IosPush extends BasePush
 
         $this->repeated = 0;
         return $response;
-    }
-
-    public function send1($deviceToken, $authToken, $payload)
-    {
-        $path = '/3/device/' . $deviceToken;
-        $curl = curl_init();
-        curl_setopt_array($curl, [
-                CURLOPT_URL            => 'https://api.push.apple.com:443' . $path,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_2_0,
-                CURLOPT_TIMEOUT        => 30,
-                CURLOPT_CUSTOMREQUEST  => 'POST',
-                CURLOPT_POSTFIELDS     => $payload,
-                CURLOPT_HTTPHEADER     => [
-                    'Content-Type: application/json',
-                    'apns-expiration: 0',
-                    'apns-topic: com.nollieapps.Chipolo',
-                    'authorization: bearer ' . $authToken,
-                ],
-            ]);
-        $response = curl_exec($curl);
-        $err      = curl_error($curl);
-        $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-        if ($err) {
-            echo 'cURL Error #:' . $err;
-        } else {
-            echo $response;
-        }
-        echo $httpcode;
     }
 }

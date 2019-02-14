@@ -13,6 +13,9 @@ class PushServiceProvider extends BaseServiceProvider
      */
     public function boot()
     {
+        $this->publishes([
+            __DIR__ . '/../config/chiopolo-push.php' => config_path('chiopolo-push.php'),
+        ]);
     }
 
     /**
@@ -22,5 +25,9 @@ class PushServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/chipolo-push.php',
+            'chipolo-push'
+        );
     }
 }
