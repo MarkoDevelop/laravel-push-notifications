@@ -1,6 +1,7 @@
 <?php
 
 namespace Chipolo\Push;
+
 use Google_Client;
 
 class AndroidPushNew extends BasePush
@@ -9,10 +10,10 @@ class AndroidPushNew extends BasePush
 
     public function createToken()
     {
-        putenv('GOOGLE_APPLICATION_CREDENTIALS=/var/www/firebase_service_account_chipolo.json');
+        putenv('GOOGLE_APPLICATION_CREDENTIALS=' . config('chipolo-push.android.google_application_credentials'));
         $client = new Google_Client();
         $client->useApplicationDefaultCredentials();
-        $client->addScope("https://www.googleapis.com/auth/firebase.messaging");
+        $client->addScope('https://www.googleapis.com/auth/firebase.messaging');
         $client->refreshTokenWithAssertion();
 
         $token = $client->getAccessToken();
@@ -34,10 +35,10 @@ class AndroidPushNew extends BasePush
                 'Content-Type'     => 'application/json; UTF-8',
                 'Authorization'    => 'Bearer ' . $this->createToken(),
             ])->handle();
-                dd($response);
+
         if ($response->getStatusCode() != 200 && $this->repeated < 3) {
             $this->repeated++;
-            $this->send($token, $payload, $topic);
+            $this->send($token, $payload);
         }
 
         $this->repeated = 0;

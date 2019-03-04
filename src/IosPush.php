@@ -47,7 +47,7 @@ class IosPush extends BasePush
         return $token;
     }
 
-    public function setTopic(bool $topic)
+    public function setTopic(string $topic)
     {
         $this->topic = $topic;
 
@@ -87,8 +87,7 @@ class IosPush extends BasePush
 
     public function send(
         string $token,
-        array $payload,
-        string $topic
+        array $payload
     ): CurlResponse {
         $response = $this->setUrl($this->getPath($token))
             ->setPayload($payload)
@@ -99,9 +98,9 @@ class IosPush extends BasePush
                 'Authorization'    => 'Bearer ' . $this->createToken(),
         ])->handle();
 
-        if ($response->getStatusCode() != 200 && $this->repeated < 3) {
+        if ($response->getStatusCode() != 200 && $this->repeated <= 1) {
             $this->repeated++;
-            $this->send($token, $payload, $topic);
+            $this->send($token, $payload);
         }
 
         $this->repeated = 0;

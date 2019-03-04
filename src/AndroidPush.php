@@ -19,9 +19,9 @@ class AndroidPush extends BasePush
                 'Authorization'    => 'Key=' . config('chipolo-push.android.authorization-key'),
             ])->handle();
 
-        if ($response->getStatusCode() != 200 && $this->repeated < 3) {
+        if ($response->getStatusCode() != 200 && $this->repeated <= 1) {
             $this->repeated++;
-            $this->send($token, $payload, $topic);
+            $this->send($token, $payload);
         }
 
         $this->repeated = 0;
