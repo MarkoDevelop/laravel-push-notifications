@@ -99,7 +99,9 @@ abstract class BasePush
 
         $response   = curl_exec($curl);
         $this->curl = new CurlResponse($curl, $response);
-        curl_close($curl);
+        if (! config('chipolo-push.general.keep-alive', false)) {
+            curl_close($curl);
+        }
 
         event(new AfterSendingPush($this->curl));
 
