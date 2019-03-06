@@ -4,6 +4,7 @@ namespace Chipolo\Push;
 
 use Chipolo\Push\IosPush;
 use Chipolo\Push\AndroidPushNew;
+use Illuminate\Support\Collection;
 use Chipolo\Push\Contracts\DeviceContract;
 
 class Push
