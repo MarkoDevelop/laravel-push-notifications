@@ -2,7 +2,7 @@
 
 return [
     'general' => [
-        'keep-alive' => true,
+        'keep_alive' => true,
     ],
     'ios'     => [
         'certificate-path' => env('PUSH_IOS_AUTH_KEY_PATH', base_path('key_chipolo.p8')),
@@ -10,7 +10,8 @@ return [
         'team-id'          => env('PUSH_IOS_TEAM_ID'),
     ],
     'android' => [
-        'authorization-key'              => env('PUSH-ANDROID-AUTH-KEY'),
-        'google_application_credentials' => env('GOOGLE_APPLICATION_CREDENTIALS', base_path('firebase_service_account_chipolo.json')),
+        'authorization-key'              => env('PUSH_ANDROID_AUTH_KEY'),
+        'google_application_credentials' => env('GOOGLE_APPLICATION_CREDENTIALS'),
+        'project_id'                     => env('PUSH_ANDROID_PROJECT_ID'),
     ],
 ];
