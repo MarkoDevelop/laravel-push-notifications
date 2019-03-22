@@ -98,12 +98,6 @@ class IosPush extends BasePush
                 'Authorization'    => 'Bearer ' . $this->createToken(),
         ])->handle();
 
-        if ($response->getStatusCode() != 200 && $this->repeated <= 1) {
-            $this->repeated++;
-            $this->send($token, $payload);
-        }
-
-        $this->repeated = 0;
         return $response;
     }
 }

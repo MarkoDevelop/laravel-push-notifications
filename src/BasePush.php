@@ -76,36 +76,38 @@ abstract class BasePush
 
     public function handle(): CurlResponse
     {
-        event(new BeforeSendingPush($this));
+        return backoff(function() {
+            event(new BeforeSendingPush($this));
 
-        $curl    = curl_init();
-        $options = [
-            CURLOPT_URL            => $this->getUrl(),
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_2_0,
-            CURLOPT_TIMEOUT        => 60,
-            CURLOPT_CUSTOMREQUEST  => 'POST',
-            CURLOPT_POSTFIELDS     => $this->getPayload(),
-            CURLOPT_HTTPHEADER     => $this->getHeaders(),
-        ];
+            $curl    = curl_init();
+            $options = [
+                CURLOPT_URL            => $this->getUrl(),
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_2_0,
+                CURLOPT_TIMEOUT        => 60,
+                CURLOPT_CUSTOMREQUEST  => 'POST',
+                CURLOPT_POSTFIELDS     => $this->getPayload(),
+                CURLOPT_HTTPHEADER     => $this->getHeaders(),
+            ];
 
-        if (config('chipolo-push.general.keep-alive', false)) {
-            array_merge($options, [
-                CURLOPT_TCP_KEEPALIVE => '1L',
-            ]);
-        }
+            if (config('chipolo-push.general.keep-alive', false)) {
+                array_merge($options, [
+                    CURLOPT_TCP_KEEPALIVE => '1L',
+                ]);
+            }
 
-        curl_setopt_array($curl, $options);
+            curl_setopt_array($curl, $options);
 
-        $response   = curl_exec($curl);
-        $this->curl = new CurlResponse($curl, $response);
-        if (! config('chipolo-push.general.keep-alive', false)) {
-            curl_close($curl);
-        }
+            $response   = curl_exec($curl);
+            $this->curl = new CurlResponse($curl, $response);
+            if (! config('chipolo-push.general.keep-alive', false)) {
+                curl_close($curl);
+            }
 
-        event(new AfterSendingPush($this->curl, $this));
+            event(new AfterSendingPush($this->curl, $this));
 
-        return $this->curl;
+            return $this->curl;
+        }, 3);
     }
 
     public function convertToCurlCommand($extra = null)

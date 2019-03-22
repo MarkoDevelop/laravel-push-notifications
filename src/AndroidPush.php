@@ -43,12 +43,6 @@ class AndroidPush extends BasePush
                 'Authorization'    => 'Bearer ' . $this->createToken(),
             ])->handle();
 
-        if ($response->getStatusCode() != 200 && $this->repeated < 3) {
-            $this->repeated++;
-            $this->send($token, $payload);
-        }
-
-        $this->repeated = 0;
         return $response;
     }
 }
