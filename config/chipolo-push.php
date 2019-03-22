@@ -5,7 +5,7 @@ return [
         'keep_alive' => true,
     ],
     'ios'     => [
-        'certificate-path' => env('PUSH_IOS_AUTH_KEY_PATH', base_path('key_chipolo.p8')),
+        'certificate-path' => env('PUSH_IOS_AUTH_KEY_PATH'),
         'secret'           => env('PUSH_IOS_SECRET'),
         'team-id'          => env('PUSH_IOS_TEAM_ID'),
     ],

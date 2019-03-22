@@ -103,7 +103,7 @@ abstract class BasePush
             curl_close($curl);
         }
 
-        event(new AfterSendingPush($this->curl));
+        event(new AfterSendingPush($this->curl, $this));
 
         return $this->curl;
     }

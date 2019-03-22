@@ -3,7 +3,7 @@
 namespace Chipolo\Push;
 
 use Chipolo\Push\IosPush;
-use Chipolo\Push\AndroidPushNew;
+use Chipolo\Push\AndroidPush;
 use Illuminate\Support\Collection;
 use Chipolo\Push\Contracts\DeviceContract;
 
@@ -56,7 +56,7 @@ class Push
 
     protected function sendAndroidPush($device)
     {
-        (new AndroidPushNew)
+        (new AndroidPush)
             ->send($device->getPushToken(), $this->payload->getAndroidPayload());
     }
 }
