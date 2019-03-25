@@ -44,6 +44,8 @@ class IosPush extends BasePush
 
         $token = $serializer->serialize($jws);
 
+        $this->setToken($token);
+
         return $token;
     }
 

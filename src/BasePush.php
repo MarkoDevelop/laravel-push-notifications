@@ -32,6 +32,26 @@ abstract class BasePush
     }
 
     /**
+     * Set token that was created for currents user
+     * request
+     *
+     * @param string $token The token
+     *
+     * @return self
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
      * Set post fields for request
      *
      * @param  array    $payload
@@ -76,7 +96,7 @@ abstract class BasePush
 
     public function handle(): CurlResponse
     {
-        return backoff(function() {
+        return backoff(function () {
             event(new BeforeSendingPush($this));
 
             $curl    = curl_init();

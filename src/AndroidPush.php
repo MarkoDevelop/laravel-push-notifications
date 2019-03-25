@@ -11,7 +11,6 @@ class AndroidPush extends BasePush
     public function createToken()
     {
         $client = new Google_Client();
-
         // Laravel 5.8 no longer loads .env variables in a way that would work with getenv()
         if (config('chipolo-push.android.google_application_credentials')) {
             $client->setAuthConfig(config('chipolo-push.android.google_application_credentials'));
@@ -22,9 +21,13 @@ class AndroidPush extends BasePush
         $client->addScope('https://www.googleapis.com/auth/firebase.messaging');
         $client->refreshTokenWithAssertion();
 
-        $token = $client->getAccessToken();
+        $accessToken = $client->getAccessToken();
 
-        return array_key_exists('access_token', $token) ? $token['access_token'] : null;
+        $token = array_key_exists('access_token', $accessToken) ? $accessToken['access_token'] : null;
+
+        $this->setToken($token);
+
+        return $token;
     }
 
     public function send(
