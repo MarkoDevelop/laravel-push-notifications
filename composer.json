@@ -1,5 +1,5 @@
 {
-    "name": "chipolo/push",
+    "name": "chipolo/laravel-push-notifications",
     "description": "Send push notifications to Android and iOS",
     "version": "0.0.1",
     "keywords": [
