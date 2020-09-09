@@ -6,8 +6,6 @@ use Google_Client;
 
 class AndroidPush extends BasePush
 {
-    private $repeated = 0;
-
     public function createToken()
     {
         $client = new Google_Client();
@@ -19,23 +17,21 @@ class AndroidPush extends BasePush
         }
 
         $client->addScope('https://www.googleapis.com/auth/firebase.messaging');
-        $client->refreshTokenWithAssertion();
+        $client->fetchAccessTokenWithAssertion();
 
         $accessToken = $client->getAccessToken();
 
-        $token = array_key_exists('access_token', $accessToken) ? $accessToken['access_token'] : null;
-
-        $this->setToken($token);
-
-        return $token;
+        return array_key_exists('access_token', $accessToken) ? $accessToken['access_token'] : null;
     }
 
     public function send(
         string $token,
         array $payload
     ): CurlResponse {
+        $this->setToken($token);
+
         $projectId = config('chipolo-push.android.project_id');
-        $response = $this->setUrl('https://fcm.googleapis.com/v1/projects/' . $projectId . '/messages:send')
+        return  $this->setUrl('https://fcm.googleapis.com/v1/projects/' . $projectId . '/messages:send')
             ->setPayload(array_merge_recursive($payload, [
                 'message' => [
                     'token' => $token,
@@ -45,7 +41,5 @@ class AndroidPush extends BasePush
                 'Content-Type'     => 'application/json; UTF-8',
                 'Authorization'    => 'Bearer ' . $this->createToken(),
             ])->handle();
-
-        return $response;
     }
 }
