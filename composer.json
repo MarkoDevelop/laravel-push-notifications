@@ -34,7 +34,7 @@
     "require": {
         "google/apiclient": "^2.2.2",
         "stechstudio/backoff": "^1.0",
-        "laravel/framework": "^7.0",
+        "laravel/framework": ">=7.0",
         "web-token/jwt-signature-algorithm-ecdsa": "^2.0",
         "web-token/jwt-key-mgmt": "^2.0",
         "ext-json": "*"
