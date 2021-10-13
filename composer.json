@@ -1,7 +1,7 @@
 {
     "name": "overthink/laravel-push-notifications",
     "description": "Send push notifications to Android and iOS",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "keywords": [
         "laravel",
         "fcm",
