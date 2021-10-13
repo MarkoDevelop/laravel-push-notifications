@@ -1,6 +1,6 @@
 <?php
 
-namespace Chipolo\Push\Contracts;
+namespace Overthink\Push\Contracts;
 
 interface DeviceContract
 {

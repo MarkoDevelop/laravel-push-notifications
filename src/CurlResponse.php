@@ -1,6 +1,6 @@
 <?php
 
-namespace Chipolo\Push;
+namespace Overthink\Push;
 
 class CurlResponse
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Chipolo\Push\Events;
+namespace Overthink\Push\Events;
 
-use Chipolo\Push\BasePush;
+use Overthink\Push\BasePush;
 use Illuminate\Queue\SerializesModels;
 
 class BeforeSendingPush

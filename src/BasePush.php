@@ -1,9 +1,9 @@
 <?php
 
-namespace Chipolo\Push;
+namespace Overthink\Push;
 
-use Chipolo\Push\Events\AfterSendingPush;
-use Chipolo\Push\Events\BeforeSendingPush;
+use Overthink\Push\Events\AfterSendingPush;
+use Overthink\Push\Events\BeforeSendingPush;
 
 abstract class BasePush
 {
@@ -39,7 +39,7 @@ abstract class BasePush
      *
      * @return self
      */
-    public function setToken($token)
+    public function setToken($token): BasePush
     {
         $this->token = $token;
 
@@ -110,8 +110,8 @@ abstract class BasePush
                 CURLOPT_HTTPHEADER     => $this->getHeaders(),
             ];
 
-            if (config('chipolo-push.general.keep-alive', false)) {
-                array_merge($options, [
+            if (config('overthink-push.general.keep-alive', false)) {
+                $options = array_merge($options, [
                     CURLOPT_TCP_KEEPALIVE => '1L',
                 ]);
             }
@@ -120,7 +120,7 @@ abstract class BasePush
 
             $response   = curl_exec($curl);
             $this->curl = new CurlResponse($curl, $response);
-            if (! config('chipolo-push.general.keep-alive', false)) {
+            if (! config('overthink-push.general.keep-alive', false)) {
                 curl_close($curl);
             }
 
@@ -130,7 +130,7 @@ abstract class BasePush
         }, 3);
     }
 
-    public function convertToCurlCommand($extra = null)
+    public function convertToCurlCommand($extra = null): string
     {
         $data = [
             'curl -d',
@@ -149,7 +149,7 @@ abstract class BasePush
         return implode(' ', $data);
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'headers'    => $this->getHeaders(),

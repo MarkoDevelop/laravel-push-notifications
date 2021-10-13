@@ -1,6 +1,6 @@
 <?php
 
-namespace Chipolo\Push;
+namespace Overthink\Push;
 
 use Exception;
 use Jose\Component\Signature\JWSBuilder;
@@ -22,13 +22,13 @@ class IosPush extends BasePush
             new ES256(),
         ]);
 
-        $jwk           = JWKFactory::createFromKeyFile(config('chipolo-push.ios.certificate-path'));
+        $jwk           = JWKFactory::createFromKeyFile(config('overthink-push.ios.certificate-path'));
         $jsonConverter = new StandardConverter();
         $jwsBuilder    = new JWSBuilder($jsonConverter, $algorithmManager);
 
         $payload = $jsonConverter->encode([
             'iat' => time(),
-            'iss' => config('chipolo-push.ios.team-id'),
+            'iss' => config('overthink-push.ios.team-id'),
         ]);
 
         $jws = $jwsBuilder
@@ -36,7 +36,7 @@ class IosPush extends BasePush
             ->withPayload($payload)
             ->addSignature($jwk, [
                 'alg' => 'ES256',
-                'kid' => config('chipolo-push.ios.secret'),
+                'kid' => config('overthink-push.ios.secret'),
             ])
             ->build();
 
@@ -49,7 +49,7 @@ class IosPush extends BasePush
         return $token;
     }
 
-    public function setTopic(string $topic)
+    public function setTopic(string $topic): IosPush
     {
         $this->topic = $topic;
 
@@ -65,14 +65,14 @@ class IosPush extends BasePush
         throw new Exception('iOS topic must be set!');
     }
 
-    public function setSandboxMode(bool $sandbox)
+    public function setSandboxMode(bool $sandbox): IosPush
     {
         $this->sandbox = $sandbox;
 
         return $this;
     }
 
-    private function getPath($token)
+    private function getPath($token): string
     {
         if ($this->sandbox) {
             $base = 'https://api.development.push.apple.com:443';
@@ -91,7 +91,7 @@ class IosPush extends BasePush
         string $token,
         array $payload
     ): CurlResponse {
-        $response = $this->setUrl($this->getPath($token))
+        return $this->setUrl($this->getPath($token))
             ->setPayload($payload)
             ->setHeaders([
                 'Content-Type'     => 'application/json',
@@ -99,7 +99,5 @@ class IosPush extends BasePush
                 'Apns-Topic'       => $this->getTopic(),
                 'Authorization'    => 'Bearer ' . $this->createToken(),
         ])->handle();
-
-        return $response;
     }
 }

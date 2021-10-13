@@ -1,6 +1,6 @@
 <?php
 
-namespace Chipolo\Push;
+namespace Overthink\Push;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
@@ -14,7 +14,7 @@ class PushServiceProvider extends BaseServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../config/chiopolo-push.php' => config_path('chiopolo-push.php'),
+            __DIR__ . '/../config/overthink-push.php' => config_path('overthink-push.php'),
         ]);
     }
 
@@ -26,8 +26,8 @@ class PushServiceProvider extends BaseServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/chipolo-push.php',
-            'chipolo-push'
+            __DIR__ . '/../config/overthink-push.php',
+            'overthink-push'
         );
     }
 }

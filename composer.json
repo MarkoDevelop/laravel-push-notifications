@@ -1,7 +1,7 @@
 {
-    "name": "chipolo/laravel-push-notifications",
+    "name": "overthink/laravel-push-notifications",
     "description": "Send push notifications to Android and iOS",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "keywords": [
         "laravel",
         "fcm",
@@ -9,31 +9,32 @@
         "google push",
         "apple push"
     ],
-    "homepage": "https://chipolo.net",
+    "homepage": "",
     "license": "MIT",
     "authors": [
         {
-            "name": "Chipolo"
+            "name": "Marko"
         }
     ],
     "support": {
-        "email": "marko@chipolo.net"
+        "email": "marko.zagar@gmail.com"
     },
     "autoload": {
         "psr-4": {
-          "Chipolo\\Push\\": "src/"
+          "Overthink\\Push\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Chipolo\\Push\\PushServiceProvider"
+                "Overthink\\Push\\PushServiceProvider"
             ]
         }
     },
     "require": {
         "web-token/jwt-framework": "^1.3.0",
         "google/apiclient": "^2.2.2",
-        "stechstudio/backoff": "^1.0"
+        "stechstudio/backoff": "^1.0",
+        "ext-json": "*"
     }
 }

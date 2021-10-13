@@ -1,11 +1,9 @@
 <?php
 
-namespace Chipolo\Push;
+namespace Overthink\Push;
 
-use Chipolo\Push\IosPush;
-use Chipolo\Push\AndroidPush;
 use Illuminate\Support\Collection;
-use Chipolo\Push\Contracts\DeviceContract;
+use Overthink\Push\Contracts\DeviceContract;
 
 class Push
 {

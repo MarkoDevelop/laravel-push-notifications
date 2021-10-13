@@ -1,6 +1,6 @@
 <?php
 
-namespace Chipolo\Push;
+namespace Overthink\Push;
 
 use Google_Client;
 
@@ -12,8 +12,8 @@ class AndroidPush extends BasePush
     {
         $client = new Google_Client();
         // Laravel 5.8 no longer loads .env variables in a way that would work with getenv()
-        if (config('chipolo-push.android.google_application_credentials')) {
-            $client->setAuthConfig(config('chipolo-push.android.google_application_credentials'));
+        if (config('overthink-push.android.google_application_credentials')) {
+            $client->setAuthConfig(config('overthink-push.android.google_application_credentials'));
         } else {
             $client->useApplicationDefaultCredentials();
         }
@@ -34,8 +34,8 @@ class AndroidPush extends BasePush
         string $token,
         array $payload
     ): CurlResponse {
-        $projectId = config('chipolo-push.android.project_id');
-        $response = $this->setUrl('https://fcm.googleapis.com/v1/projects/' . $projectId . '/messages:send')
+        $projectId = config('overthink-push.android.project_id');
+        return $this->setUrl('https://fcm.googleapis.com/v1/projects/' . $projectId . '/messages:send')
             ->setPayload(array_merge_recursive($payload, [
                 'message' => [
                     'token' => $token,
@@ -45,7 +45,5 @@ class AndroidPush extends BasePush
                 'Content-Type'     => 'application/json; UTF-8',
                 'Authorization'    => 'Bearer ' . $this->createToken(),
             ])->handle();
-
-        return $response;
     }
 }

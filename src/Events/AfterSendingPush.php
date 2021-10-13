@@ -1,9 +1,9 @@
 <?php
 
-namespace Chipolo\Push\Events;
+namespace Overthink\Push\Events;
 
-use Chipolo\Push\BasePush;
-use Chipolo\Push\CurlResponse;
+use Overthink\Push\BasePush;
+use Overthink\Push\CurlResponse;
 use Illuminate\Queue\SerializesModels;
 
 class AfterSendingPush
