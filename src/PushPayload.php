@@ -1,4 +1,5 @@
 <?php
+
 namespace Overthink\Push;
 
 class PushPayload

@@ -3,53 +3,50 @@
 namespace Overthink\Push;
 
 use Exception;
-use Jose\Component\Signature\JWSBuilder;
 use Jose\Component\Core\AlgorithmManager;
 use Jose\Component\KeyManagement\JWKFactory;
-use Jose\Component\Signature\Algorithm\ES256;
-use Jose\Component\Core\Converter\StandardConverter;
+use Jose\Component\Signature\Algorithm\ES512;
+use Jose\Component\Signature\JWSBuilder;
 use Jose\Component\Signature\Serializer\CompactSerializer;
 
 class IosPush extends BasePush
 {
     protected $sandbox = false;
     protected $topic;
-    private $repeated  = 0;
 
     private function createToken(): string
     {
-        $algorithmManager = AlgorithmManager::create([
-            new ES256(),
+        $algorithmManager = new AlgorithmManager([
+            new ES512(),
         ]);
 
-        $jwk           = JWKFactory::createFromKeyFile(config('overthink-push.ios.certificate-path'));
-        $jsonConverter = new StandardConverter();
-        $jwsBuilder    = new JWSBuilder($jsonConverter, $algorithmManager);
-
-        $payload = $jsonConverter->encode([
-            'iat' => time(),
+        $jwsBuilder = new JWSBuilder($algorithmManager);
+        $payload = json_encode([
             'iss' => config('overthink-push.ios.team-id'),
+            'iat' => time(),
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+
+        $privateECKey =  JWKFactory::createFromKeyFile(config('overthink-push.ios.certificate-path'), null, [
+            'kid' => config('overthink-push.ios.secret'),
+            'alg' => 'ES512',
+            'use' => 'sig'
         ]);
 
         $jws = $jwsBuilder
             ->create()
             ->withPayload($payload)
-            ->addSignature($jwk, [
-                'alg' => 'ES256',
-                'kid' => config('overthink-push.ios.secret'),
+            ->addSignature($privateECKey, [
+                'alg' => 'ES512',
+                'kid' => $privateECKey->get('kid'),
             ])
             ->build();
 
-        $serializer = new CompactSerializer($jsonConverter);
+        $serializer = new CompactSerializer();
 
-        $token = $serializer->serialize($jws);
-
-        $this->setToken($token);
-
-        return $token;
+        return $serializer->serialize($jws);
     }
 
-    public function setTopic(string $topic): IosPush
+    public function setTopic(string $topic)
     {
         $this->topic = $topic;
 
@@ -91,6 +88,8 @@ class IosPush extends BasePush
         string $token,
         array $payload
     ): CurlResponse {
+        $this->setToken($token);
+
         return $this->setUrl($this->getPath($token))
             ->setPayload($payload)
             ->setHeaders([

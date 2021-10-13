@@ -6,8 +6,6 @@ use Google_Client;
 
 class AndroidPush extends BasePush
 {
-    private $repeated = 0;
-
     public function createToken()
     {
         $client = new Google_Client();
@@ -19,21 +17,19 @@ class AndroidPush extends BasePush
         }
 
         $client->addScope('https://www.googleapis.com/auth/firebase.messaging');
-        $client->refreshTokenWithAssertion();
+        $client->fetchAccessTokenWithAssertion();
 
         $accessToken = $client->getAccessToken();
 
-        $token = array_key_exists('access_token', $accessToken) ? $accessToken['access_token'] : null;
-
-        $this->setToken($token);
-
-        return $token;
+        return array_key_exists('access_token', $accessToken) ? $accessToken['access_token'] : null;
     }
 
     public function send(
         string $token,
         array $payload
     ): CurlResponse {
+        $this->setToken($token);
+
         $projectId = config('overthink-push.android.project_id');
         return $this->setUrl('https://fcm.googleapis.com/v1/projects/' . $projectId . '/messages:send')
             ->setPayload(array_merge_recursive($payload, [
