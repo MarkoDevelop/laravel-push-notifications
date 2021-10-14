@@ -110,7 +110,7 @@ abstract class BasePush
                 CURLOPT_HTTPHEADER     => $this->getHeaders(),
             ];
 
-            if (config('chipolo-push.general.keep-alive', false)) {
+            if (config('overthink-push.general.keep-alive', false)) {
                 $options = array_merge($options, [
                     CURLOPT_TCP_KEEPALIVE => '1L',
                 ]);
@@ -120,7 +120,7 @@ abstract class BasePush
 
             $response   = curl_exec($curl);
             $this->curl = new CurlResponse($curl, $response);
-            if (! config('chipolo-push.general.keep-alive', false)) {
+            if (! config('overthink-push.general.keep-alive', false)) {
                 curl_close($curl);
             }
 
