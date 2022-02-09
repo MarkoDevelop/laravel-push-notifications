@@ -13,7 +13,7 @@ composer require overthink/laravel-push-notifications
 You can publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag="laravel-push-notifications"
+php artisan vendor:publish --provider="Overthink\Push\PushServiceProvider"
 ```
 
 This is the contents of the published config file:
