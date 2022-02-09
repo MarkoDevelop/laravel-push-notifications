@@ -1,6 +1,6 @@
 # Send pushes with Laravel
 
-This is a wrapper around 
+This is a helper that takes away the pain of setting specific calls for Android and iOS pushes.
 
 ## Installation
 
