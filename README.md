@@ -1,6 +1,6 @@
 # Send pushes with Laravel
 
-This is a helper that takes away the pain of setting specific calls for Android and iOS pushes.
+This is a helper that takes away the pain of setting specific calls for Android and iOS pushes. It works with Laravel 8.0.
 
 ## Installation
 
